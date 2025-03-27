@@ -6,6 +6,7 @@ Happier is a web application designed to gather inputs from users about their sa
 
 📁 Project Structure
 /happier/                  # Project Root Directory
+
 │── index.html             # Main Webpage (Home Page)
 │── style.css              # Main Stylesheet
 │── script.js              # Main JavaScript File
