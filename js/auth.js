@@ -1,45 +1,76 @@
 import { auth, db } from "./firebase-config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+import { 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    sendPasswordResetEmail 
+} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
 import { setDoc, doc } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
 
-// Handle User Registration
-document.getElementById("register-form")?.addEventListener("submit", async function(event) {
-    event.preventDefault();
+// Ensure the DOM is fully loaded before accessing elements
+document.addEventListener("DOMContentLoaded", function () {
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    // Handle User Registration
+    const registerForm = document.getElementById("register-form");
+    if (registerForm) {
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
 
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-        // Store user data in Firestore
-        await setDoc(doc(db, "users", user.uid), {
-            name: name,
-            email: email,
-            createdAt: new Date()
+                // Store user details in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    createdAt: new Date()
+                });
+
+                alert("Account created successfully!");
+                window.location.href = "login.html"; 
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
         });
-
-        alert("Account created successfully!");
-        window.location.href = "login.html"; // Redirect to login page
-    } catch (error) {
-        alert(error.message);
     }
-});
 
-// Handle User Login
-document.getElementById("login-form")?.addEventListener("submit", async function(event) {
-    event.preventDefault();
+    // Handle User Login
+    const loginForm = document.getElementById("login-form");
+    if (loginForm) {
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                alert("Login Successful!");
+                window.location.href = "../index.html"; 
+            } catch (error) {
+                alert("Invalid credentials! " + error.message);
+            }
+        });
+    }
 
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        alert("Login Successful!");
-        window.location.href = "../index.html"; // Redirect to home page
-    } catch (error) {
-        alert("Invalid credentials! " + error.message);
+    // Handle Password Reset
+    const resetBtn = document.getElementById("reset-btn");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", async function () {
+            const email = document.getElementById("email").value;
+            if (!email) {
+                document.getElementById("message").innerText = "Please enter your email.";
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                document.getElementById("message").innerText = "Password reset email sent! Check your inbox.";
+            } catch (error) {
+                document.getElementById("message").innerText = "Error: " + error.message;
+            }
+        });
     }
 });
