@@ -6,6 +6,7 @@ Happier is a web application designed to gather inputs from users about their sa
 
 📁 Project Structure
 /happier/                  # Project Root Directory
+
 │── index.html             # Main Webpage (Home Page)
 │── style.css              # Main Stylesheet
 │── script.js              # Main JavaScript File
@@ -63,7 +64,7 @@ Steps to Run Locally
 
 Clone the Repository
 
-git clone https://github.com/your-username/happier.git
+git clone (https://github.com/vinuwa98/Happier.git)
 
 Navigate to the Project Directory
 
