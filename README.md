@@ -64,7 +64,7 @@ Steps to Run Locally
 
 Clone the Repository
 
-git clone https://github.com/your-username/happier.git
+git clone (https://github.com/vinuwa98/Happier.git)
 
 Navigate to the Project Directory
 
